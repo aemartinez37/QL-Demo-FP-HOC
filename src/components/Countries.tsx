@@ -14,7 +14,7 @@ const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
 const emptyConditionFn = (props: CustomQuery) => !props.data;
 
-const composeRendering = compose(
+const composeCountriesRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
   MaybeHOC(emptyConditionFn),
@@ -41,7 +41,7 @@ const Countries = ({ ...props }) => {
   );
 };
 
-const CountriesWithComposeRendering = composeRendering(Countries);
+const CountriesWithComposeRendering = composeCountriesRendering(Countries);
 
 export const CountriesWrapper = () => {
   const queryResult = useQuery("countriesList", getCountries);

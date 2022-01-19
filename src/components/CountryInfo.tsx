@@ -9,35 +9,48 @@ import {
   StyledCountryName,
 } from "./styled/StyledComponents";
 import { getCountry } from "../services/ApiCountries";
+import { CustomQuery } from "../types";
+import compose from "recompose/compose";
+import { EitherHOC } from "../functional-hocs/EitherHoc";
+import { MaybeHOC } from "../functional-hocs/MaybeHoc";
+import { Error } from "./Error";
+import { Loading } from "./Loading";
 
-export const CountryInfo = () => {
-  const { countryAlpha3Code = "" } = useParams<{ countryAlpha3Code: string }>();
-  const { data } = useQuery(["countryInfo", countryAlpha3Code], () => getCountry(countryAlpha3Code));
+const isErrorFn = (props: CustomQuery) => props.isError;
+const isLoadingFn = (props: CustomQuery) => props.isLoading;
+const emptyConditionFn = (props: CustomQuery) => !props.data;
 
+const composeCountryInfoRendering = compose(
+  EitherHOC(isErrorFn, Error),
+  EitherHOC(isLoadingFn, Loading),
+  MaybeHOC(emptyConditionFn),
+);
+
+const CountryInfo = ({ ...props }) => {
   return (
     <StyledCountryInfo>
-      <StyledCountry id={data?.alpha3Code.toString()}>
-        <StyledCountryImage src={data?.flags.png} alt={`${data?.name} flag`} />
-        <StyledCountryName>{data?.name}</StyledCountryName>
+      <StyledCountry id={props.data.alpha3Code.toString()}>
+        <StyledCountryImage src={props.data.flags.png} alt={`${props.data.name} flag`} />
+        <StyledCountryName>{props.data.name}</StyledCountryName>
         <StyledCountryInfoTable>
           <tbody>
             <tr>
               <td>Capital:</td>
-              <td>{data?.capital}</td>
+              <td>{props.data.capital}</td>
             </tr>
             <tr>
               <td>Region:</td>
-              <td>{data?.region}</td>
+              <td>{props.data.region}</td>
             </tr>
             <tr>
               <td>Subregion:</td>
-              <td>{data?.subregion}</td>
+              <td>{props.data.subregion}</td>
             </tr>
             <tr>
               <td>Borders:</td>
               <td>
-                {(data?.borders &&
-                  data?.borders.map((border) => {
+                {(props.data.borders &&
+                  props.data.borders.map((border: string) => {
                     return <Link key={`${border}`} to={`/${border}`}>{`${border}`}</Link>;
                   })) ||
                   "-"}
@@ -48,4 +61,12 @@ export const CountryInfo = () => {
       </StyledCountry>
     </StyledCountryInfo>
   );
+};
+
+const CountryInfoWithComposeRendering = composeCountryInfoRendering(CountryInfo);
+
+export const CountryInfoWrapper = () => {
+  const { countryAlpha3Code = "" } = useParams<{ countryAlpha3Code: string }>();
+  const queryResult = useQuery(["countryInfo", countryAlpha3Code], () => getCountry(countryAlpha3Code));
+  return <CountryInfoWithComposeRendering {...queryResult} />;
 };
