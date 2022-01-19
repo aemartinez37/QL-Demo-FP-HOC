@@ -12,12 +12,12 @@ import { MaybeHOC } from "../functional-hocs/MaybeHoc";
 
 const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const emptyConditionFn = (props: CustomQuery) => !props.data;
+const nothingContriesConditionFn = (props: CustomQuery) => !(props.data as Country[]);
 
 const composeCountriesRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(emptyConditionFn),
+  MaybeHOC(nothingContriesConditionFn),
 );
 
 const CountryElem = ({ name, alpha3Code, flags }: Country) => {
