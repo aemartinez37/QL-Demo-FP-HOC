@@ -16,16 +16,7 @@ import { MaybeHOC } from "../functional-hocs/MaybeHoc";
 import { Error } from "./Error";
 import { Loading } from "./Loading";
 
-const isErrorFn = (props: CustomQuery) => props.isError;
-const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const nothingContryInfoConditionFn = (props: CustomQuery) => !(props.data as Country).name;
-
-const composeCountryInfoRendering = compose(
-  EitherHOC(isErrorFn, Error),
-  EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(nothingContryInfoConditionFn),
-);
-
+/* Function Component */
 const CountryInfo = ({ ...props }) => {
   return (
     <StyledCountryInfo>
@@ -63,8 +54,22 @@ const CountryInfo = ({ ...props }) => {
   );
 };
 
+/* Conditional Functions */
+const isErrorFn = (props: CustomQuery) => props.isError;
+const isLoadingFn = (props: CustomQuery) => props.isLoading;
+const nothingContryInfoConditionFn = (props: CustomQuery) => !(props.data as Country).name;
+
+/* Composing Functional HOCs */
+const composeCountryInfoRendering = compose(
+  EitherHOC(isErrorFn, Error),
+  EitherHOC(isLoadingFn, Loading),
+  MaybeHOC(nothingContryInfoConditionFn),
+);
+
+/* Composed Component */
 const CountryInfoWithComposeRendering = composeCountryInfoRendering(CountryInfo);
 
+/* Composed Component Wrapper */
 export const CountryInfoWrapper = () => {
   const { countryAlpha3Code = "" } = useParams<{ countryAlpha3Code: string }>();
   const queryResult = useQuery(["countryInfo", countryAlpha3Code], () => getCountry(countryAlpha3Code));
