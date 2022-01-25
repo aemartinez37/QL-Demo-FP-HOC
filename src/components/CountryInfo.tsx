@@ -9,12 +9,12 @@ import {
   StyledCountryName,
 } from "./styled/StyledComponents";
 import { getCountry } from "../services/ApiCountries";
-import { Country, CustomQuery } from "../types";
-import compose from "recompose/compose";
+import { CustomQuery } from "../types";
 import { EitherHOC } from "../functional-hocs/EitherHoc";
 import { MaybeHOC } from "../functional-hocs/MaybeHoc";
 import { Error } from "./Error";
 import { Loading } from "./Loading";
+import { compose, isCountryObject } from "../utils";
 
 /* Function Component */
 const CountryInfo = ({ ...props }) => {
@@ -57,13 +57,13 @@ const CountryInfo = ({ ...props }) => {
 /* Conditional Functions */
 const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const nothingContryInfoConditionFn = (props: CustomQuery) => !(props.data as Country).name;
+const nothingCountryInfoConditionFn = (props: CustomQuery) => !isCountryObject(props.data);
 
 /* Composing Functional HOCs */
 const composeCountryInfoRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(nothingContryInfoConditionFn),
+  MaybeHOC(nothingCountryInfoConditionFn),
 );
 
 /* Composed Component */

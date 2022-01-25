@@ -29,10 +29,10 @@ export const Countries = () => {
     return <Error />;
   }
 
-  if ((data as Country[]).length > 0) {
+  if (data && data.length > 0) {
     return (
       <StyledCountries>
-        {(data as Country[]).map((country: Country) => (
+        {data.map((country: Country) => (
           <CountryElem key={country.alpha3Code} {...country} />
         ))}
       </StyledCountries>

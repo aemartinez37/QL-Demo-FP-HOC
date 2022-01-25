@@ -3,11 +3,11 @@ import axios from "axios";
 import { Country } from "../types";
 
 export const getCountries = async () => {
-  const { data } = await axios.get(`${REST_COUNTRIES_API}/all`);
-  return data as Country[];
+  const { data } = await axios.get<Country[]>(`${REST_COUNTRIES_API}/all`);
+  return data;
 };
 
 export const getCountry = async (alpha3Code: string) => {
-  const { data } = await axios.get(`${REST_COUNTRIES_API}/alpha/${alpha3Code}`);
-  return data as Country;
+  const { data } = await axios.get<Country>(`${REST_COUNTRIES_API}/alpha/${alpha3Code}`);
+  return data;
 };

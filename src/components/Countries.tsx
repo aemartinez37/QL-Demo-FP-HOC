@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { Country, CustomQuery } from "../types";
 import { StyledCountries, StyledCountry, StyledCountryImage, StyledCountryName } from "./styled/StyledComponents";
 import { getCountries } from "../services/ApiCountries";
-import { compose } from "recompose";
 import { Loading } from "./Loading";
 import { Error } from "./Error";
 import { EitherHOC } from "../functional-hocs/EitherHoc";
 import { MaybeHOC } from "../functional-hocs/MaybeHoc";
+import { compose } from "../utils";
 
 /* Function Components */
 const CountryElem = ({ name, alpha3Code, flags }: Country) => {
@@ -35,13 +35,13 @@ const Countries = ({ ...props }) => {
 /* Conditional Functions */
 const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const nothingContriesConditionFn = (props: CustomQuery) => !(props.data as Country[]);
+const nothingCountriesConditionFn = (props: CustomQuery) => !props.data;
 
 /* Composing Functional HOCs */
 const composeCountriesRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(nothingContriesConditionFn),
+  MaybeHOC(nothingCountriesConditionFn),
 );
 
 /* Composed Component */

@@ -1,7 +1,9 @@
 import React from "react";
 
-export const EitherHOC =
-  (conditionalRenderingFn: (props: any) => boolean, EitherComponent: React.FC) =>
-  (Component: React.FC) =>
-  (props: any) =>
-    conditionalRenderingFn(props) ? <EitherComponent /> : <Component {...props} />;
+export function EitherHOC<T extends object>(
+  conditionalRenderingFn: (props: T) => boolean,
+  EitherComponent: React.ComponentType<T>,
+) {
+  return (Component: React.ComponentType<T>) => (props: T) =>
+    conditionalRenderingFn(props) ? <EitherComponent {...props} /> : <Component {...props} />;
+}

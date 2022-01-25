@@ -1,4 +1,6 @@
 import React from "react";
 
-export const MaybeHOC = (conditionalRenderingFn: (props: any) => boolean) => (Component: React.FC) => (props: any) =>
-  conditionalRenderingFn(props) ? <h1>Nothing!</h1> : <Component {...props} />;
+export function MaybeHOC<T extends object>(conditionalRenderingFn: (props: T) => boolean) {
+  return (Component: React.ComponentType<T>) => (props: T) =>
+    conditionalRenderingFn(props) ? <h1>Nothing!</h1> : <Component {...props} />;
+}
