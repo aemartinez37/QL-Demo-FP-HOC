@@ -8,7 +8,7 @@ import { Loading } from "./Loading";
 import { Error } from "./Error";
 import { EitherHOC } from "../functional-hocs/EitherHoc";
 import { MaybeHOC } from "../functional-hocs/MaybeHoc";
-import { compose } from "../utils";
+import { compose, isCountryArray } from "../utils";
 
 /* Function Components */
 const CountryElem = ({ name, alpha3Code, flags }: Country) => {
@@ -35,13 +35,13 @@ const Countries = ({ ...props }) => {
 /* Conditional Functions */
 const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const nothingCountriesConditionFn = (props: CustomQuery) => !props.data;
+const justCountriesConditionFn = (props: CustomQuery) => isCountryArray(props.data) && props.data.length > 0;
 
 /* Composing Functional HOCs */
 const composeCountriesRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(nothingCountriesConditionFn),
+  MaybeHOC(justCountriesConditionFn),
 );
 
 /* Composed Component */

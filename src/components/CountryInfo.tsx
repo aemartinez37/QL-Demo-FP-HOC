@@ -57,13 +57,13 @@ const CountryInfo = ({ ...props }) => {
 /* Conditional Functions */
 const isErrorFn = (props: CustomQuery) => props.isError;
 const isLoadingFn = (props: CustomQuery) => props.isLoading;
-const nothingCountryInfoConditionFn = (props: CustomQuery) => !isCountryObject(props.data);
+const justCountryInfoConditionFn = (props: CustomQuery) => isCountryObject(props.data);
 
 /* Composing Functional HOCs */
 const composeCountryInfoRendering = compose(
   EitherHOC(isErrorFn, Error),
   EitherHOC(isLoadingFn, Loading),
-  MaybeHOC(nothingCountryInfoConditionFn),
+  MaybeHOC(justCountryInfoConditionFn),
 );
 
 /* Composed Component */
