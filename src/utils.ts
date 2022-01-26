@@ -2,11 +2,11 @@ import { Country } from "./types";
 
 /* Type Guards - Duck Typing*/
 export function isCountryObject(value: Country | Country[]): value is Country {
-  return (value as Country).name !== undefined;
+  return (value as Country)?.name !== undefined;
 }
 
 export function isCountryArray(value: Country | Country[]): value is Country[] {
-  return (value as Country[]).length !== undefined;
+  return (value as Country[])?.length !== undefined;
 }
 
 /* Compose Function */
